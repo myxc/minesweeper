@@ -1,0 +1,22 @@
+Board file 
+accepts difficulty mode which specifies number of bombs and size of board
+instance variable that contains all of the game information i.e. bombs assigned etc.
+instance variable of empty board which is what the user sees (is displayed)
+randomly assigns bombs to elements in unseen instance board
+places numbers in for the elements of array that have bombs around to reflect number of bombs around it
+Renders seen board
+Render loss  
+
+#Cell file
+#contains instance variables for whether it has a bomb, whether it has been flagged, if it's clicked it'll use engine #file to check it and surrounding cell files.
+
+Engine file
+require_relative board file
+Uses board file's isntance of game board and checks user inputs against that piece on the board
+if that element is an empty element aka placeholder element, then engine will check surrounding pieces and reveal all of the empty pieces that make up that block as well as all of the numbers surrounding the empty elements, and then assigns new value into the seen board so that these changes will be displayed to the user
+if that element is a bomb, assign all bomb locations on seen board with bomb indication and then dislpay message to user telling him he lost
+if that element is a number element then assign that element on seen board with that number so that the user will see it
+if user 
+
+player file 
+asking for player name and difficulty level which will be passed into the game engine file for purpose of displaying name during win/loss and to board file to determine difficulty level of the board.
