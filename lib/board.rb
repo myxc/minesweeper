@@ -13,6 +13,7 @@ class Board
 		@j = 10 #^
 		@row = 10#used for user entries
 		@col = 10#^
+		@win_counter = 0
 	end
 
 	def gen_bombs #generates number of bombs per specifications
@@ -95,7 +96,7 @@ class Board
 	end #fill tile works properly
 
 	def render
-		print "rw1 rw2 rw3 rw4 rw5 rw6 rw7 rw8 rw9 r10\n"
+		print "cl1 cl2 cl3 cl4 cl5 cl6 cl7 cl8 cl9 c10\n"
 		(0..9).each do |row|
 			(0..9).each do |col|
 				if @grid[row][col].is_flagged
@@ -109,7 +110,7 @@ class Board
 				else print "xxx"
 				end
 				print "|" unless col == 9
-				print "col#{row + 1}\n" if col == 9
+				print "row#{row + 1}\n" if col == 9
 			end
 		end
 	end #render works properly
@@ -123,6 +124,9 @@ class Board
 
 	def unhide_tiles(row_num, col_num) #for when the user clicks an empty tile, it will reveal all empty tiles enclosed by numbered tiles.
 		if @grid[row_num][col_num].is_empty #no number no bomb and hidden
+			if @grid[row_num][col_num].is_flagged
+				cell_flagger(row_num, col_num)
+			end
 			@grid[row_num][col_num].unhide #unhides it and checks around it
 			reveal_cell(row_num - 1, col_num - 1)
             reveal_cell(row_num - 1, col_num)
@@ -157,14 +161,10 @@ class Board
 		@win_counter = 0
 		@grid.each_with_index do |row, r_index|
 			row.each_with_index do |col, c_index|
-				@win_counter += 1 unless @grid[r_index][c_index].is_hidden
+				unless @grid[r_index][c_index].is_hidden
+					@win_counter += 1					
+				end
 			end
-		end
-		if @win_counter == (100 - 9)
-			puts "You won the game!"
-			return true
-		else
-			return false
 		end
 	end
 
@@ -208,13 +208,17 @@ class Board
 		if ["2", "flag", "f"].include?(gets.to_s.downcase.strip) #if input is 2 or flag or f indicating user wants to flag shit
 			cell_flagger(@row, @col)
 		elsif check_bomb(@row, @col) == true #input isn't flag, check coords and return false indicating game is over
+			puts "checked and found a bomb"
 			return false
 		else
+			puts "unhiding tile because not flagging and there's no bomb"
 			unhide_tiles(@row, @col)#if the coords are not a bomb, then reveal the tile/tiles
 		end
-		if check_win == true
-			return false #if they won then return false indicating game ended
-		end				
+		render
+		check_win
+		if @win_counter == 100 - 9
+			puts "You win!"
+			return false
+		end			
 	end
-
 end
