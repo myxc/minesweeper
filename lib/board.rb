@@ -99,7 +99,9 @@ class Board
 		print "rw1 rw2 rw3 rw4 rw5 rw6 rw7 rw8 rw9 r10\n"
 		(0..9).each do |row|
 			(0..9).each do |col|
-				if @grid[row][col].is_hidden
+				if @grid[row][col].is_flagged
+					print "FLG"
+				elsif @grid[row][col].is_hidden
 					print "   "
 				elsif @grid[row][col].surrounding_bombs > 0
 					print " #{@grid[row][col].surrounding_bombs} "
@@ -119,8 +121,8 @@ class Board
 	end
 
 	def unhide_tiles(row_num, col_num) #for when the user clicks an empty tile, it will reveal all empty tiles enclosed by numbered tiles.
-		if @grid[row_num][col_num].is_empty #if this first tile is empty then it'll check it's surroundings
-			@grid[row_num][col_num].unhide
+		if @grid[row_num][col_num].is_empty #no number no bomb and hidden
+			@grid[row_num][col_num].unhide #unhides it and checks around it
 			reveal_cell(row_num - 1, col_num - 1)
             reveal_cell(row_num - 1, col_num)
             reveal_cell(row_num - 1, col_num + 1)
@@ -133,20 +135,18 @@ class Board
         else
         	@grid[row_num][col_num].unhide #if this first tile is a number it just gets unhidden.
         end
-    end
+    end#needs a bit of work it doesn't reveal numbers
 
 	def reveal_cell(row_num, col_num) #planning to be used recursively, used after ensuring the user did not click on a bomb.
 		if (row_num <= 9 && row_num >=0) and (col_num <= 9 && col_num >=0)
-			if @grid[row_num][col_num].is_empty #if this tile is empty it'll unhide and then propagate
-				@grid[row_num][col_num].unhide
+			if @grid[row_num][col_num].is_hidden #if this tile is empty it'll unhide and then propagate
+				#@grid[row_num][col_num].unhide
 				unhide_tiles(row_num, col_num)
 			else
 				@grid[row_num][col_num].unhide #if this tile is a number it'll just unhide and won't propagate off it.
 			end
-		else
-			return;
 		end
-	end
+	end #needs bit of work it doesn't reveal edge nubers
 
 	def cell_flagger(row_num, col_num)
 		@grid[row_num][col_num].flagger
@@ -187,7 +187,7 @@ class Board
 		@col = Integer(string_col) - 1
 		puts "enter 1 to reveal this square, enter 2 to flag/unflag it"
 		if ["2", "flag", "f"].include?(gets.to_s.downcase.strip) #if input is 2 or flag or f indicating user wants to flag shit
-			board.cell_flagger(@row, @col)
+			cell_flagger(@row, @col)
 		elsif check_bomb(@row, @col) == true #input isn't flag, check coords and return false indicating game is over
 			return false
 		else

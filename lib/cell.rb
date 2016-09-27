@@ -30,6 +30,14 @@ class Cell
 		end
 	end
 
+	def is_flagged
+		if @flagged == true
+			return true
+		else
+			return false
+		end
+	end
+
 	def is_empty
 		if @surrounding_bombs == 0 and @bomb_present == false and @hidden == true
 			return true
