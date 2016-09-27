@@ -196,24 +196,34 @@ class Board
 			puts "Please enter row (row 1 is top row, row 10 is bottom row)"
 			string_row = gets.strip
 			unless string_row.match(/^\d{1,2}$/)
+				refresh
 				puts "please enter valid number"
 				return true
 			end
 			@row = Integer(string_row) - 1
 			if @row <= 9 and @row >= 0
 				break
+			else
+				refresh
+				puts "please enter a valid number"
+				render
 			end
 		end
 		while true
 			puts "please enter col (col 1 is first row from the left, col 10 is last row)"
 			string_col = gets.strip
 			unless string_col.match(/^\d{1,2}$/)
+				refresh
 				puts "please enter valid number"
 				return true
 			end
 			@col = Integer(string_col) - 1
 			if @col <= 9 and @col >= 0
 				break
+			else
+				refresh
+				puts "please enter a valid number"
+				render
 			end
 		end
 		puts "enter (2/flag/f) to flag it, anything else will count as clicking it"
