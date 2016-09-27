@@ -29,7 +29,6 @@ class Board
 	def get_coords(num)
 		@i = num/10
 		@j = num%10
-		puts "called coods"
 	end
 
 	def fill_tile
@@ -105,6 +104,8 @@ class Board
 					print "   "
 				elsif @grid[row][col].surrounding_bombs > 0
 					print " #{@grid[row][col].surrounding_bombs} "
+				elsif @grid[row][col].has_bomb
+					print "POW"					
 				else print "xxx"
 				end
 				print "|" unless col == 9
@@ -179,13 +180,23 @@ class Board
 	end
 
 	def user_prompt
-		puts "Please enter row (row 1 is top row, row 10 is bottom row)"
-		string_row = gets.strip
-		@row = Integer(string_row) - 1
-		puts "please enter col (col 1 is first row from the left, col 10 is last row)"
-		string_col = gets.strip
-		@col = Integer(string_col) - 1
-		puts "enter 1 to reveal this square, enter 2 to flag/unflag it"
+		while true
+			puts "Please enter row (row 1 is top row, row 10 is bottom row)"
+			string_row = gets.strip
+			@row = Integer(string_row) - 1
+			if @row <= 9 and @row >= 0
+				break
+			end
+		end
+		while true
+			puts "please enter col (col 1 is first row from the left, col 10 is last row)"
+			string_col = gets.strip
+			@col = Integer(string_col) - 1
+			if @col <= 9 and @col >= 0
+				break
+			end
+		end
+		puts "enter (2/flag/f) to flag it, anything else will count as clicking it"
 		if ["2", "flag", "f"].include?(gets.to_s.downcase.strip) #if input is 2 or flag or f indicating user wants to flag shit
 			cell_flagger(@row, @col)
 		elsif check_bomb(@row, @col) == true #input isn't flag, check coords and return false indicating game is over
