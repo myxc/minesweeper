@@ -96,15 +96,17 @@ class Board
 	end #fill tile works properly
 
 	def render
+		print "rw1 rw2 rw3 rw4 rw5 rw6 rw7 rw8 rw9 r10\n"
 		(0..9).each do |row|
 			(0..9).each do |col|
 				if @grid[row][col].is_hidden
-					print " "
+					print "   "
 				elsif @grid[row][col].surrounding_bombs > 0
-					print "#{@grid[row][col].surrounding_bombs}"
+					print " #{@grid[row][col].surrounding_bombs} "
+				else print "xxx"
 				end
 				print "|" unless col == 9
-				print "\n" if col == 9
+				print "col#{row + 1}\n" if col == 9
 			end
 		end
 	end #render works properly
@@ -117,19 +119,21 @@ class Board
 	end
 
 	def unhide_tiles(row_num, col_num) #for when the user clicks an empty tile, it will reveal all empty tiles enclosed by numbered tiles.
-			if @grid[row_num][col_num].is_empty #if this first tile is empty then it'll check it's surroundings
-				reveal_cell(row_num - 1, col_num - 1)
-	            reveal_cell(row_num - 1, col_num)
-	            reveal_cell(row_num - 1, col_num + 1)
-	            reveal_cell(row_num + 1, col_num)
+		if @grid[row_num][col_num].is_empty #if this first tile is empty then it'll check it's surroundings
+			@grid[row_num][col_num].unhide
+			reveal_cell(row_num - 1, col_num - 1)
+            reveal_cell(row_num - 1, col_num)
+            reveal_cell(row_num - 1, col_num + 1)
+            reveal_cell(row_num + 1, col_num)
 
-	            reveal_cell(row_num, col_num - 1)
-	            reveal_cell(row_num, col_num + 1)
-	            reveal_cell(row_num + 1, col_num - 1)
-	            reveal_cell(row_num + 1, col_num + 1)
-	        else
-	        	@grid[row_num][col_num].unhide #if this first tile is a number it just gets unhidden.
-	end
+            reveal_cell(row_num, col_num - 1)
+            reveal_cell(row_num, col_num + 1)
+            reveal_cell(row_num + 1, col_num - 1)
+            reveal_cell(row_num + 1, col_num + 1)
+        else
+        	@grid[row_num][col_num].unhide #if this first tile is a number it just gets unhidden.
+        end
+    end
 
 	def reveal_cell(row_num, col_num) #planning to be used recursively, used after ensuring the user did not click on a bomb.
 		if (row_num <= 9 && row_num >=0) and (col_num <= 9 && col_num >=0)
@@ -167,6 +171,7 @@ class Board
 		if @grid[row_num][col_num].has_bomb
 			puts "You have lost the game!!!"
 			unhide_bombs
+			render
 			return true
 		else
 			return false
@@ -192,5 +197,5 @@ class Board
 			return false #if they won then return false indicating game ended
 		end				
 	end
-	
+
 end

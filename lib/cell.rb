@@ -31,7 +31,7 @@ class Cell
 	end
 
 	def is_empty
-		if @surrounding_bombs == 0 and @bomb_present == false
+		if @surrounding_bombs == 0 and @bomb_present == false and @hidden == true
 			return true
 		else
 			return false
