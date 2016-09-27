@@ -179,6 +179,18 @@ class Board
 		end
 	end
 
+#	def check_revealed(row_num, col_num)
+#		if @grid[row_num, col_num].is_revealed
+#			return true
+#		else
+#			return false
+#		end
+#	end
+
+	def refresh
+		print "\n" * 25
+	end
+
 	def user_prompt
 		while true
 			puts "Please enter row (row 1 is top row, row 10 is bottom row)"
@@ -207,17 +219,23 @@ class Board
 		puts "enter (2/flag/f) to flag it, anything else will count as clicking it"
 		if ["2", "flag", "f"].include?(gets.to_s.downcase.strip) #if input is 2 or flag or f indicating user wants to flag shit
 			cell_flagger(@row, @col)
+		elsif !@grid[@row][@col].is_hidden#if the square has already been clicked then it'll tell the user they can't unhide this
+			refresh
+			puts "You can't click this square because it is already revealed"
 		elsif check_bomb(@row, @col) == true #input isn't flag, check coords and return false indicating game is over
+			refresh
 			puts "checked and found a bomb"
 			return false
 		else
+			refresh
 			puts "unhiding tile because not flagging and there's no bomb"
 			unhide_tiles(@row, @col)#if the coords are not a bomb, then reveal the tile/tiles
 		end
-		render
 		check_win
 		if @win_counter == 100 - 9
+			refresh
 			puts "You win!"
+			render
 			return false
 		end			
 	end

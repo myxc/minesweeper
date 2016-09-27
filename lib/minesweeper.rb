@@ -8,10 +8,6 @@ class Minesweeper_game
 		@col = 10
 	end
 
-	def refresh
-		print "\n" * 25
-	end
-
 	def new_game
 
 		player = Player.new
@@ -21,9 +17,9 @@ class Minesweeper_game
 
 		board.fill_tile #fills board.grid with empty, bomb, and numbered cells
 
+		board.refresh
 
 		while true
-			refresh
 			board.render #renders board.
 
 			if board.user_prompt == false
